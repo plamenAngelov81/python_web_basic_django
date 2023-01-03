@@ -1,10 +1,11 @@
 from django.db import models
 from django.core.validators import MinLengthValidator, ValidationError, MinValueValidator
 
-
-# def validate_username(value):
-#     if not value.isalpha() or not value == '_':
-#         raise ValidationError("Ensure this value contains only letters, numbers, and underscore.")
+# Check the validators first!
+def validate_username(value):
+    for ch in value:
+        if not ch.isalpha or not ch == "_": 
+            raise ValidationError("Ensure this value contains only letters, numbers, and underscore.")
 
 
 class Profile(models.Model):
@@ -15,7 +16,7 @@ class Profile(models.Model):
     username = models.CharField(
         verbose_name='Username',
         max_length=USERNAME_MAX_LEN,
-        # validators=[MinLengthValidator(USERNAME_MIN_LEN)]
+        validators=[MinLengthValidator(USERNAME_MIN_LEN), validate_username]
     )
 
     email = models.EmailField(
@@ -24,7 +25,7 @@ class Profile(models.Model):
 
     age = models.IntegerField(
         verbose_name='Age',
-        # validators=[MinValueValidator(MIN_AGE_VALUE)]
+        validators=[MinValueValidator(MIN_AGE_VALUE)]
     )
 
 
@@ -75,7 +76,7 @@ class Album(models.Model):
 
     price = models.FloatField(
         verbose_name="Price",
-        # validators=[MinValueValidator(MIN_PRICE_VALUE)]
+        validators=[MinValueValidator(MIN_PRICE_VALUE)]
     )
 
     class Meta:
